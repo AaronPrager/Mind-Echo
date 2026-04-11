@@ -1,0 +1,118 @@
+.root {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  text-align: center;
+  overflow: visible;
+  animation: fadeIn 0.55s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.handle {
+  opacity: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  border: none !important;
+}
+
+.center {
+  width: 160px;
+  height: 160px;
+  border: 2px solid var(--accent-primary);
+  box-shadow: var(--node-border-glow) var(--accent-primary);
+  background: rgba(79, 142, 247, 0.1);
+}
+
+.subtopic {
+  width: 120px;
+  height: 120px;
+  border: 2px solid var(--accent-secondary);
+  box-shadow: var(--node-border-glow) var(--accent-secondary);
+  background: rgba(168, 85, 247, 0.08);
+}
+
+.concept {
+  width: 90px;
+  height: 90px;
+  border: 1px solid var(--accent-tertiary);
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.35);
+  background: rgba(34, 211, 238, 0.06);
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.25;
+  padding: 0 10px;
+  color: var(--text-primary);
+  max-width: 100%;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+.tooltip {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  max-width: 240px;
+}
+
+.tooltipAbove {
+  bottom: calc(100% + 12px);
+}
+
+.tooltipBelow {
+  top: calc(100% + 12px);
+}
+
+.tooltipInner {
+  background: rgba(26, 26, 46, 0.95);
+  border: 1px solid var(--accent-secondary);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  max-width: 220px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.tooltipArrow {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+}
+
+.tooltipAbove .tooltipArrow {
+  bottom: -7px;
+  border-top: 7px solid var(--accent-secondary);
+}
+
+.tooltipBelow .tooltipArrow {
+  top: -7px;
+  border-bottom: 7px solid var(--accent-secondary);
+}

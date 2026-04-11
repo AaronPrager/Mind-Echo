@@ -1,0 +1,33 @@
+:root {
+  --accent-primary: #4f8ef7;
+  --accent-secondary: #a855f7;
+  --accent-tertiary: #22d3ee;
+  --text-primary: #f0f0f0;
+  --text-muted: #6666aa;
+  --node-border-glow: 0 0 16px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  background-color: #000000 !important;
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  color: var(--text-primary);
+}
+
+.react-flow {
+  background: #000000;
+}
+
+.react-flow__background {
+  background: #000000;
+}

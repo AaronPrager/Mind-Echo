@@ -1,0 +1,41 @@
+.wrap {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1.25rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.msg {
+  max-width: 28rem;
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.55;
+  font-size: 0.95rem;
+}
+
+.retry {
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.6rem 1.25rem;
+  border-radius: 10px;
+  border: 1px solid var(--accent-primary);
+  background: rgba(79, 142, 247, 0.12);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.retry:hover {
+  background: rgba(79, 142, 247, 0.22);
+}

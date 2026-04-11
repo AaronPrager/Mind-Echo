@@ -1,0 +1,35 @@
+.svg {
+  width: min(72vw, 320px);
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.breathe {
+  transform-origin: 160px 160px;
+  animation: breathe 3s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+.center {
+  fill: rgba(79, 142, 247, 0.12);
+  stroke: #4f8ef7;
+  stroke-width: 2;
+  filter: url(#glow);
+}
+
+.child {
+  fill: rgba(168, 85, 247, 0.1);
+  stroke: #a855f7;
+  stroke-width: 1.5;
+  filter: url(#glow);
+}
