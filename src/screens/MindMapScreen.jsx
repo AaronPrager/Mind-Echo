@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import ReactFlow, { Panel, ReactFlowProvider, useEdgesState, useNodesState, useReactFlow } from 'reactflow';
+import ReactFlow, { ReactFlowProvider, useEdgesState, useNodesState, useReactFlow } from 'reactflow';
 import 'reactflow/dist/style.css';
+import { CircleStraightEdge } from '../components/CircleStraightEdge';
 import { CustomNode } from '../components/CustomNode';
-import { MindMapControls } from '../components/MindMapControls';
+import { MindMapSidePanel } from '../components/MindMapSidePanel';
+import { NodeHoverProvider, useNodeHover } from '../context/NodeHoverContext';
 import { computeLayout } from '../utils/layoutUtils';
 import styles from '../styles/mindmap.module.css';
 
@@ -17,19 +19,8 @@ function FitViewOnDataChange({ mapData, nodeCount }) {
   return null;
 }
 
-function MindMapControlsInner({ onNewRecording }) {
-  const { fitView, zoomIn, zoomOut } = useReactFlow();
-  return (
-    <MindMapControls
-      onFitView={() => fitView({ padding: 0.2 })}
-      onZoomIn={() => zoomIn()}
-      onZoomOut={() => zoomOut()}
-      onNewRecording={onNewRecording}
-    />
-  );
-}
-
 function FlowInner({ mapData, onNewRecording }) {
+  const { setHovered, scheduleClearHover } = useNodeHover();
   const laidOut = useMemo(() => computeLayout(mapData), [mapData]);
   const [nodes, setNodes, onNodesChange] = useNodesState(laidOut.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(laidOut.edges);
@@ -41,38 +32,56 @@ function FlowInner({ mapData, onNewRecording }) {
   }, [mapData, setNodes, setEdges]);
 
   const nodeTypes = useMemo(() => ({ custom: CustomNode }), []);
+  const edgeTypes = useMemo(() => ({ circleStraight: CircleStraightEdge }), []);
 
   const onInit = useCallback((instance) => {
     requestAnimationFrame(() => instance.fitView({ padding: 0.25 }));
   }, []);
 
+  const onNodeMouseEnter = useCallback(
+    (_event, node) => {
+      const label = typeof node.data?.label === 'string' ? node.data.label : '';
+      const description = typeof node.data?.description === 'string' ? node.data.description : '';
+      setHovered({ id: node.id, label, description });
+    },
+    [setHovered]
+  );
+
+  const onNodeMouseLeave = useCallback(() => {
+    scheduleClearHover();
+  }, [scheduleClearHover]);
+
   return (
-    <div className={styles.canvas}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        nodeTypes={nodeTypes}
-        fitView
-        fitViewOptions={{ padding: 0.25 }}
-        defaultViewport={defaultViewport}
-        minZoom={0.2}
-        maxZoom={2}
-        panOnDrag
-        zoomOnScroll
-        attributionPosition="bottom-left"
-        nodesDraggable
-        nodesConnectable={false}
-        elementsSelectable
-        onInit={onInit}
-        style={{ background: '#000000' }}
-      >
-        <FitViewOnDataChange mapData={mapData} nodeCount={nodes.length} />
-        <Panel position="top-right">
-          <MindMapControlsInner onNewRecording={onNewRecording} />
-        </Panel>
-      </ReactFlow>
+    <div className={styles.layout}>
+      <div className={styles.flowMain}>
+        <ReactFlow
+          className={styles.flowFill}
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
+          fitView
+          fitViewOptions={{ padding: 0.25 }}
+          defaultViewport={defaultViewport}
+          minZoom={0.2}
+          maxZoom={2}
+          panOnDrag
+          zoomOnScroll
+          attributionPosition="bottom-left"
+          nodesDraggable
+          nodesConnectable={false}
+          elementsSelectable
+          onInit={onInit}
+          onNodeMouseEnter={onNodeMouseEnter}
+          onNodeMouseLeave={onNodeMouseLeave}
+          style={{ background: '#000000' }}
+        >
+          <FitViewOnDataChange mapData={mapData} nodeCount={nodes.length} />
+        </ReactFlow>
+      </div>
+      <MindMapSidePanel onNewRecording={onNewRecording} />
     </div>
   );
 }
@@ -80,7 +89,9 @@ function FlowInner({ mapData, onNewRecording }) {
 export function MindMapScreen({ mapData, onNewRecording }) {
   return (
     <ReactFlowProvider>
-      <FlowInner mapData={mapData} onNewRecording={onNewRecording} />
+      <NodeHoverProvider>
+        <FlowInner mapData={mapData} onNewRecording={onNewRecording} />
+      </NodeHoverProvider>
     </ReactFlowProvider>
   );
 }

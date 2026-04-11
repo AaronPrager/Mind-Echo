@@ -1,42 +1,14 @@
-import { memo, useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { memo } from 'react';
 import { Handle, Position } from 'reactflow';
+import { useNodeHover } from '../context/NodeHoverContext';
 import styles from '../styles/customNode.module.css';
 
-function Tooltip({ visible, text, placement }) {
-  if (!visible || !text) return null;
-  return (
-    <div
-      className={`${styles.tooltip} ${placement === 'below' ? styles.tooltipBelow : styles.tooltipAbove}`}
-      style={{ pointerEvents: 'none' }}
-    >
-      <span className={styles.tooltipArrow} aria-hidden />
-      <div className={styles.tooltipInner}>{text}</div>
-    </div>
-  );
-}
-
-function CustomNodeComponent({ data }) {
-  const [visible, setVisible] = useState(false);
-  const [placement, setPlacement] = useState('above');
-  const rootRef = useRef(null);
+function CustomNodeComponent({ id, data }) {
+  const { hovered } = useNodeHover();
+  const isHovered = hovered?.id === id;
 
   const nodeType = data?.nodeType ?? 'concept';
   const delay = `${(data?.animationIndex ?? 0) * 0.06}s`;
-
-  const updatePlacement = useCallback(() => {
-    const el = rootRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    setPlacement(rect.top < 120 ? 'below' : 'above');
-  }, []);
-
-  useLayoutEffect(() => {
-    if (!visible) return;
-    updatePlacement();
-    const onScroll = () => updatePlacement();
-    window.addEventListener('scroll', onScroll, true);
-    return () => window.removeEventListener('scroll', onScroll, true);
-  }, [visible, updatePlacement]);
 
   const shellClass =
     nodeType === 'center'
@@ -45,20 +17,23 @@ function CustomNodeComponent({ data }) {
         ? styles.subtopic
         : styles.concept;
 
-  const description = typeof data?.description === 'string' ? data.description : '';
+  const glowClass =
+    isHovered && nodeType === 'center'
+      ? styles.hoveredCenter
+      : isHovered && nodeType === 'subtopic'
+        ? styles.hoveredSubtopic
+        : isHovered
+          ? styles.hoveredConcept
+          : '';
 
   return (
     <div
-      ref={rootRef}
-      className={`${styles.root} ${shellClass}`}
+      className={`${styles.root} ${shellClass} ${glowClass}`.trim()}
       style={{ animationDelay: delay }}
-      onMouseEnter={() => setVisible(true)}
-      onMouseLeave={() => setVisible(false)}
     >
       <Handle type="target" position={Position.Top} className={styles.handle} />
       <Handle type="source" position={Position.Bottom} className={styles.handle} />
       <div className={styles.label}>{data?.label}</div>
-      <Tooltip visible={visible} text={description} placement={placement} />
     </div>
   );
 }

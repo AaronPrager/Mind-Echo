@@ -65,7 +65,7 @@ export function computeLayout(mapData) {
       id: `e-${centralTopic.id}-${st.id}`,
       source: centralTopic.id,
       target: st.id,
-      type: 'smoothstep',
+      type: 'circleStraight',
       animated: false,
       style: {
         stroke: 'rgba(255,255,255,0.35)',
@@ -101,7 +101,7 @@ export function computeLayout(mapData) {
         id: `e-${st.id}-${c.id}`,
         source: st.id,
         target: c.id,
-        type: 'smoothstep',
+        type: 'circleStraight',
         animated: false,
         style: {
           stroke: 'rgba(255,255,255,0.2)',
