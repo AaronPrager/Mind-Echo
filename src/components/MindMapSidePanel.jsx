@@ -4,19 +4,19 @@ import { MindMapControls } from './MindMapControls';
 import { useReactFlow } from 'reactflow';
 import styles from '../styles/mindmap.module.css';
 
-function ControlsWithFlow({ onNewRecording }) {
+function ControlsWithFlow({ onStartOver }) {
   const { fitView, zoomIn, zoomOut } = useReactFlow();
   return (
     <MindMapControls
       onFitView={() => fitView({ padding: 0.2 })}
       onZoomIn={() => zoomIn()}
       onZoomOut={() => zoomOut()}
-      onNewRecording={onNewRecording}
+      onStartOver={onStartOver}
     />
   );
 }
 
-export function MindMapSidePanel({ onNewRecording }) {
+export function MindMapSidePanel({ onStartOver }) {
   const { hovered } = useNodeHover();
   const descTarget = hovered?.description ?? '';
   const animationKey = hovered?.id ?? '';
@@ -31,7 +31,7 @@ export function MindMapSidePanel({ onNewRecording }) {
   return (
     <aside className={styles.sidePanel} aria-label="Map controls and node details">
       <div className={styles.sidePanelHeader}>Mind Echo</div>
-      <ControlsWithFlow onNewRecording={onNewRecording} />
+      <ControlsWithFlow onStartOver={onStartOver} />
       <div className={styles.detailSection}>
         {hovered ? (
           <div className={styles.detailLabel}>{hovered.label}</div>

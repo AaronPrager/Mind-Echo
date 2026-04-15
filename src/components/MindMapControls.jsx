@@ -1,6 +1,6 @@
 import styles from '../styles/mindmap.module.css';
 
-export function MindMapControls({ onFitView, onZoomIn, onZoomOut, onNewRecording }) {
+export function MindMapControls({ onFitView, onZoomIn, onZoomOut, onStartOver }) {
   return (
     <div className={styles.controls}>
       <div className={styles.row}>
@@ -14,8 +14,8 @@ export function MindMapControls({ onFitView, onZoomIn, onZoomOut, onNewRecording
       <button type="button" onClick={onFitView}>
         Fit view
       </button>
-      <button type="button" className={styles.newBtn} onClick={onNewRecording}>
-        New recording
+      <button type="button" className={styles.newBtn} onClick={onStartOver}>
+        Start over
       </button>
     </div>
   );

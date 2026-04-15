@@ -3,6 +3,7 @@ import { ErrorScreen } from './screens/ErrorScreen';
 import { LandingScreen } from './screens/LandingScreen';
 import { MindMapScreen } from './screens/MindMapScreen';
 import { ProcessingScreen } from './screens/ProcessingScreen';
+import { USER_TEXT } from './userTranscript';
 
 const SCREENS = {
   LANDING: 'LANDING',
@@ -14,12 +15,10 @@ const SCREENS = {
 export default function App() {
   const [screen, setScreen] = useState(SCREENS.LANDING);
   const [mapData, setMapData] = useState(null);
-  const [audioBlob, setAudioBlob] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [landingKey, setLandingKey] = useState(0);
 
-  const handleRecordingComplete = useCallback((blob) => {
-    setAudioBlob(blob);
+  const handleGenerateMindMap = useCallback(() => {
     setScreen(SCREENS.PROCESSING);
   }, []);
 
@@ -33,9 +32,8 @@ export default function App() {
     setScreen(SCREENS.ERROR);
   }, []);
 
-  const handleNewRecording = useCallback(() => {
+  const handleStartOver = useCallback(() => {
     setMapData(null);
-    setAudioBlob(null);
     setErrorMessage('');
     setLandingKey((k) => k + 1);
     setScreen(SCREENS.LANDING);
@@ -43,21 +41,18 @@ export default function App() {
 
   const handleErrorRetry = useCallback(() => {
     setErrorMessage('');
-    setAudioBlob(null);
     setLandingKey((k) => k + 1);
     setScreen(SCREENS.LANDING);
   }, []);
 
   if (screen === SCREENS.LANDING) {
-    return (
-      <LandingScreen key={landingKey} onRecordingComplete={handleRecordingComplete} />
-    );
+    return <LandingScreen key={landingKey} onGenerateMindMap={handleGenerateMindMap} />;
   }
 
-  if (screen === SCREENS.PROCESSING && audioBlob) {
+  if (screen === SCREENS.PROCESSING) {
     return (
       <ProcessingScreen
-        audioBlob={audioBlob}
+        text={USER_TEXT}
         onSuccess={handleProcessingSuccess}
         onError={handleProcessingError}
       />
@@ -69,8 +64,8 @@ export default function App() {
   }
 
   if (screen === SCREENS.MAP && mapData) {
-    return <MindMapScreen mapData={mapData} onNewRecording={handleNewRecording} />;
+    return <MindMapScreen mapData={mapData} onStartOver={handleStartOver} />;
   }
 
-  return <LandingScreen key={landingKey} onRecordingComplete={handleRecordingComplete} />;
+  return <LandingScreen key={landingKey} onGenerateMindMap={handleGenerateMindMap} />;
 }

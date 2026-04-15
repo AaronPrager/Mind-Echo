@@ -19,7 +19,7 @@ function FitViewOnDataChange({ mapData, nodeCount }) {
   return null;
 }
 
-function FlowInner({ mapData, onNewRecording }) {
+function FlowInner({ mapData, onStartOver }) {
   const { setHovered, scheduleClearHover } = useNodeHover();
   const laidOut = useMemo(() => computeLayout(mapData), [mapData]);
   const [nodes, setNodes, onNodesChange] = useNodesState(laidOut.nodes);
@@ -81,16 +81,16 @@ function FlowInner({ mapData, onNewRecording }) {
           <FitViewOnDataChange mapData={mapData} nodeCount={nodes.length} />
         </ReactFlow>
       </div>
-      <MindMapSidePanel onNewRecording={onNewRecording} />
+      <MindMapSidePanel onStartOver={onStartOver} />
     </div>
   );
 }
 
-export function MindMapScreen({ mapData, onNewRecording }) {
+export function MindMapScreen({ mapData, onStartOver }) {
   return (
     <ReactFlowProvider>
       <NodeHoverProvider>
-        <FlowInner mapData={mapData} onNewRecording={onNewRecording} />
+        <FlowInner mapData={mapData} onStartOver={onStartOver} />
       </NodeHoverProvider>
     </ReactFlowProvider>
   );
